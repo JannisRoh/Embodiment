@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ProgressBarController : MonoBehaviour
 {
     private Slider progressBar;
-    private float fillSpeed = 100; // The speed at which the progress bar fills
+    private float fillSpeed = 10; // The speed at which the progress bar fills
 
     private float requiredFillAmount; // The amount needed to fill the bar
     private float currentFillAmount = 0; // The current amount filled

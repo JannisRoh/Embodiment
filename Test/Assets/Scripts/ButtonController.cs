@@ -10,6 +10,7 @@ public class ButtonController : MonoBehaviour
     // Reference to the specific PipeController this button controls
     public PipeController associatedPipe;
     public ProgressBarController associatedProgressBar;
+    public SourceController associatedSource;
 
     private bool isShaking = false;
 
@@ -32,13 +33,20 @@ public class ButtonController : MonoBehaviour
         if (physicalButton != null && physicalButton.IsPressed)
         {
             pressTimer += Time.deltaTime;
+            associatedSource.Active();
             associatedPipe.CheckAnchorStatus();
+
+            if (associatedPipe.IsAnchorAttached == false)
+            {
+                associatedPipe.EmitPaint();
+            }
 
             if (associatedPipe != null && associatedPipe.IsAnchorAttached)
             {
+                associatedPipe.StopPaint();
                 // Call the function to increase progress
                 Debug.Log("Button is pressed and pipe in socket");
-                associatedProgressBar.IncreaseProgress(); // Implement this function as needed
+                associatedProgressBar.IncreaseProgress();
             }
             
             //Debug.Log("Press timer = " + pressTimer);
@@ -46,7 +54,7 @@ public class ButtonController : MonoBehaviour
             {
                 if (associatedPipe != null)
                 {
-                    StartCoroutine(associatedPipe.ShakeAnchorable(0.5f, 0.01f, 0.05f)); // Start shaking
+                    StartCoroutine(associatedPipe.ShakeAnchorable(0.5f, 0.01f, 0.1f)); // Start shaking
                     isShaking = true; // Set shaking flag to true
                 }
                 Debug.Log("Shake in ButtonController");
@@ -83,5 +91,6 @@ public class ButtonController : MonoBehaviour
         // Randomize max press duration between 1 and 5 seconds
         maxPressDuration = Random.Range(1f, 5f);
         Debug.Log("Max press duration = " + maxPressDuration);
+        associatedPipe.StopPaint();
     }
 }

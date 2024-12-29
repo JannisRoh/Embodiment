@@ -3,9 +3,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject[] pipes;
-    public GameObject[] sockets;
     public GameObject[] buttons;
-    public GameObject[] progressBars;
+    public GameObject[] panels;
+    public GameObject[] tanks;
 
     public static GameManager Instance { get; private set; }
 
@@ -41,30 +41,50 @@ public class GameManager : MonoBehaviour
         // Randomize progress bar requirements and button-press limits
         foreach (var pipe in pipes)
         {
-            pipe.GetComponent<PipeController>().DisconnectFromSocket();
             pipe.GetComponent<PipeController>().SetupPipe();
         }
 
-        foreach (var progressBar in progressBars)
-        {
-            progressBar.GetComponent<ProgressBarController>().RandomizeFillRequirements();
-        }
         foreach (var button in buttons)
         {
             button.GetComponent<ButtonController>().RandomizeMaxPressDuration();
+        }
+        foreach (var panel in panels)
+        {
+            panel.GetComponent<TargetColorController>().SetupTargetColor();
         }
     }
 
     public void CheckWinCondition()
     {
-        foreach (var progressBar in progressBars)
+        foreach (var tank in tanks)
         {
-            if (!progressBar.GetComponent<ProgressBarController>().IsFull())
-                return;
+            var paintTankController = tank.GetComponent<PaintTankController>();
+            
+            if (paintTankController == null)
+            {
+                //Debug.LogError($"GameObject {tank.name} does not have a PaintTankController component.");
+                continue; // Skip to the next tank
+            }
+
+            Debug.Log($"Checking tank {tank.name}: currentFillHeight = {paintTankController.currentFillHeight}, maxFillHeight = {paintTankController.maxFillHeight}");
+            
+            if (!paintTankController.IsFull())
+            {
+                //Debug.Log($"Tank {tank.name} is not full. (currentFillHeight: {paintTankController.currentFillHeight})");
+                return; // Exit the function if a tank is not full
+            }
+
+            if (!paintTankController.ColorCheck())
+            {
+                //Debug.Log($"Tank {tank.name} color does not match the target. (currentColor: {paintTankController.currentColor}, targetColor: {paintTankController.panel.randomColor})");
+                return; // Exit the function if a tank's color doesn't match
+            }
+
+            //Debug.Log($"Tank {tank.name} passed all checks (Full and Color match).");
         }
 
-        // Trigger new level or end the game
-        Debug.Log("Level Completed!");
-        InitializeLevel();
+        Debug.Log("All tanks passed the checks. Initializing the next level.");
+        InitializeLevel(); // If all tanks pass the checks, initialize the next level
     }
+
 }

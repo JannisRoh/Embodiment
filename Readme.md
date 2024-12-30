@@ -31,7 +31,8 @@ Farbtanks korrekt befüllst.
 - Der Build ist für MacOS mit Apple silicon oder Intel 64-bit.
   Allerdings habe ich es nur auf Apple silicon getestet, da ich kein Mac
   mit Intel-CPU zum testen habe
-
+- Wenn beim öffnen des Builds diese Fehlermeldung erscheint: "Apple can’t check app for malicious software",
+  müssen den Anweisungen auf dieser Seite gefolgt werden. https://support.apple.com/en-gb/guide/mac-help/mchleab3a043/mac
 - Zum spielen wird eine Ultraleap 3Di benötigt. Diese muss flach auf den
   Tisch vor dem Monitor hingelegt werden.  
     
